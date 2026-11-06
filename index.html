@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>CSE Academic Command Center • MAKAUT Sem 3</title>
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131d",
+            "surface-dim": "#0f131d",
+            "surface-bright": "#353944",
+            "surface-container-lowest": "#0a0e18",
+            "surface-container-low": "#171b26",
+            "surface-container": "#1c1f2a",
+            "surface-container-high": "#262a35",
+            "surface-container-highest": "#313540",
+            "on-surface": "#dfe2f1",
+            "on-surface-variant": "#c2c6d6",
+            "primary": "#adc6ff",
+            "on-primary": "#002e6a",
+            "primary-container": "#4d8eff",
+            "on-primary-container": "#00285d",
+            "secondary": "#d0bcff",
+            "secondary-container": "#571bc1",
+            "on-secondary-container": "#c4abff",
+            "tertiary": "#4edea3",
+            "tertiary-container": "#00a572",
+            "on-tertiary-container": "#00311f",
+            "error": "#ffb4ab",
+            "error-container": "#93000a",
+            "outline": "#8c909f",
+            "outline-variant": "#424754"
+          },
+          fontFamily: {
+            "headline-xl": ["Inter", "sans-serif"],
+            "headline-lg": ["Inter", "sans-serif"],
+            "headline-md": ["Inter", "sans-serif"],
+            "headline-sm": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-code-lg": ["JetBrains Mono", "monospace"],
+            "label-code-md": ["JetBrains Mono", "monospace"],
+            "label-code-sm": ["JetBrains Mono", "monospace"]
+          },
+          spacing: {
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/src/style.css"/>
+  <style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background-color: #0f131d;
+        color: #dfe2f1;
+        overflow-x: hidden;
+      }
+      body {
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col relative select-none">
+
+  <!-- Fixed Top Header -->
+  <header class="fixed top-0 w-full z-40 bg-surface/90 backdrop-blur-xl pt-safe cyber-border shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+    <div class="max-w-7xl mx-auto h-16 px-margin flex items-center justify-between gap-space-xs">
+      <div class="flex items-center gap-space-sm">
+        <button aria-label="Open Navigation Drawer" class="md:hidden w-10 h-10 flex items-center justify-center text-on-surface hover:text-primary transition-colors" onclick="openDrawer()" type="button">
+          <span class="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+        
+        <!-- Logo Badge -->
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('dashboard')">
+          <div class="w-8 h-8 rounded-lg bg-primary/10 cyber-border flex items-center justify-center text-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">terminal</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline-sm font-bold text-on-surface leading-tight tracking-tight">CSE COMMAND</span>
+            <span class="font-label-code-sm text-primary tracking-wide uppercase text-[10px]">SEM 3 • MAKAUT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Right Telemetry & Profile -->
+      <div class="flex items-center gap-space-sm">
+        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high cyber-border text-[11px] font-label-code-sm text-tertiary">
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+          <span>TELEMETRY ONLINE</span>
+        </div>
+
+        <button aria-label="Notifications" class="w-10 h-10 relative flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" onclick="showToast('All academic telemetry nodes synced with MAKAUT V3.4', 'info')" type="button">
+          <span class="material-symbols-outlined text-[22px]">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary ring-2 ring-surface"></span>
+        </button>
+
+        <div class="flex items-center gap-2 pl-space-xs cursor-pointer" onclick="openModal('modal-profile-edit')">
+          <img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqkKMUMJL8likW6lV0UZjY1dONaiavlF6XbnN-iLUbE37o_FG1hLyPxkSkLTl6TE1GdI8cui1A_ZwlnwYL3XcStog-WE4UPCJRtnPhl1USelSfzo1MygXhx1CdIBbOCGtvKZHsSbm397Z7yo_WUtMTvd4kjEzSVpTcmlSmkBhhFuE9D6BJVun_0Tl4BosqWsgZ46wloqU6szpuP0aF1nAvR0XxgTtXcmLJUCCVa651"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none md:hidden" id="drawer-backdrop" onclick="closeDrawer()"></div>
+
+  <!-- Mobile Drawer / Left Sidebar -->
+  <aside class="fixed inset-y-0 left-0 z-50 w-[84%] max-w-sm bg-surface-container-low backdrop-blur-2xl transform -translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between cyber-border shadow-[0_0_30px_rgba(0,0,0,0.8)] md:translate-x-0 md:w-64 md:top-16 md:bottom-0 md:z-30" id="mobile-drawer">
+    <div class="flex flex-col flex-1 overflow-y-auto">
+      <!-- Profile Box -->
+      <div class="pt-safe px-margin pb-space-md bg-surface-container/60 md:pt-4">
+        <div class="flex items-center justify-between pt-space-xs mb-space-sm md:hidden">
+          <div class="flex items-center gap-space-xs">
+            <span class="font-headline-sm font-bold text-primary">CSE COMMAND</span>
+          </div>
+          <button class="w-9 h-9 flex items-center justify-center text-on-surface-variant hover:text-on-surface" onclick="closeDrawer()" type="button">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-space-sm p-space-sm bg-surface-container-high rounded-xl cyber-border cursor-pointer" onclick="openModal('modal-profile-edit')">
+          <img alt="Profile" class="w-11 h-11 rounded-full object-cover ring-2 ring-primary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqkKMUMJL8likW6lV0UZjY1dONaiavlF6XbnN-iLUbE37o_FG1hLyPxkSkLTl6TE1GdI8cui1A_ZwlnwYL3XcStog-WE4UPCJRtnPhl1USelSfzo1MygXhx1CdIBbOCGtvKZHsSbm397Z7yo_WUtMTvd4kjEzSVpTcmlSmkBhhFuE9D6BJVun_0Tl4BosqWsgZ46wloqU6szpuP0aF1nAvR0XxgTtXcmLJUCCVa651"/>
+          <div class="flex flex-col min-w-0">
+            <span class="font-headline-sm font-bold text-on-surface truncate profile-name">Akashdip Sah</span>
+            <span class="font-body-sm text-outline truncate profile-degree">B.Tech CSE • BBIT</span>
+            <span class="font-label-code-sm text-tertiary mt-0.5 text-[10px] profile-batch">SEM 3 • 2023-2027</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="px-space-sm py-space-sm space-y-1">
+        <div class="px-space-sm py-1 font-label-code-sm text-[11px] uppercase tracking-wider text-outline">Core Navigation</div>
+        
+        <button onclick="switchView('dashboard')" data-view-target="dashboard" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl transition-all bg-surface-container-highest text-primary font-semibold text-left">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span class="font-body-md text-sm">Dashboard</span>
+        </button>
+
+        <button onclick="switchView('subjects')" data-view-target="subjects" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[20px]">menu_book</span>
+          <span class="font-body-md text-sm">My Subjects</span>
+        </button>
+
+        <button onclick="switchView('study')" data-view-target="study" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[20px]">timer</span>
+          <span class="font-body-md text-sm">Study (Pomodoro)</span>
+        </button>
+
+        <button onclick="switchView('goals')" data-view-target="goals" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[20px]">fact_check</span>
+          <span class="font-body-md text-sm">Daily Goals</span>
+        </button>
+
+        <button onclick="switchView('tests')" data-view-target="tests" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+          <span class="font-body-md text-sm">Tests & Evaluation</span>
+        </button>
+
+        <button onclick="switchView('pyq')" data-view-target="pyq" class="w-full flex items-center gap-space-md h-11 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+          <span class="font-body-md text-sm">PYQ Bank</span>
+        </button>
+
+        <div class="my-space-xs border-t border-outline/10"></div>
+        <div class="px-space-sm py-1 font-label-code-sm text-[11px] uppercase tracking-wider text-outline">Academic Quick Actions</div>
+
+        <button onclick="switchView('subjects')" class="w-full flex items-center gap-space-md h-10 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[18px]">account_tree</span>
+          <span class="font-body-md text-xs">Syllabus Tracker</span>
+        </button>
+
+        <button onclick="openModal('modal-add-test')" class="w-full flex items-center gap-space-md h-10 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[18px]">calculate</span>
+          <span class="font-body-md text-xs">Log Test Marks</span>
+        </button>
+
+        <button onclick="openModal('modal-profile-edit')" class="w-full flex items-center gap-space-md h-10 px-space-md rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-left">
+          <span class="material-symbols-outlined text-[18px]">tune</span>
+          <span class="font-body-md text-xs">Preferences & Target</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="p-space-md pb-safe bg-surface-container-lowest/90 cyber-border">
+      <div class="flex items-center justify-between text-on-surface-variant font-label-code-sm text-[11px]">
+        <span>BUILD 3.4.1_MAKAUT</span>
+        <span class="flex items-center gap-1 text-tertiary">
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>SYNCED
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Canvas -->
+  <main class="flex-1 flex flex-col relative w-full pt-20 pb-24 md:pl-64 bg-surface min-h-screen">
+    <div class="max-w-5xl mx-auto w-full px-margin flex flex-col space-y-space-md">
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 1: DASHBOARD OVERVIEW -->
+      <!-- ========================================================================= -->
+      <section id="view-dashboard" class="view-pane flex flex-col space-y-space-md">
+        <!-- Welcome & Profile Command Deck -->
+        <div class="relative overflow-hidden rounded-xl bg-surface-container p-space-md cyber-border shadow-md">
+          <div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="flex flex-col space-y-space-sm relative z-10">
+            <!-- Greeting Banner with Subtle Live Pulse -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-xs">
+                <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                <span class="font-label-code-sm uppercase tracking-wider text-tertiary text-xs">Mission Active • Sem 3</span>
+              </div>
+              <button onclick="openModal('modal-profile-edit')" class="flex items-center gap-1 px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-label-code-sm hover:text-primary transition-colors" type="button">
+                <span class="material-symbols-outlined text-[14px]">tune</span>
+                <span>Preferences</span>
+              </button>
+            </div>
+            
+            <div>
+              <h1 class="font-headline-lg font-bold text-on-surface">Welcome back, <span class="profile-name text-primary">Akashdip</span>!</h1>
+              <p class="font-body-md text-on-surface-variant">Ready to make today productive? Your algorithms await.</p>
+            </div>
+
+            <!-- Quick Profile Matrix -->
+            <div class="pt-space-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm bg-surface-container-low p-space-sm rounded-lg cyber-border">
+              <div class="flex items-center gap-space-sm min-w-0">
+                <div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary cyber-border">
+                  <span class="material-symbols-outlined text-[28px]">terminal</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-headline-sm font-semibold text-on-surface profile-name">Akashdip Sah</span>
+                    <span class="px-1.5 py-0.5 rounded bg-primary-container/20 text-primary font-label-code-sm text-[10px]">B.TECH CSE</span>
+                  </div>
+                  <p class="font-body-sm text-outline truncate profile-degree">Budge Budge Institute of Technology (MAKAUT)</p>
+                  <span class="font-label-code-sm text-outline text-[10px] profile-batch">Batch 2026–2027 • Section A</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-space-xs w-full sm:w-auto justify-end">
+                <div class="flex flex-col items-end px-space-sm py-1 bg-surface-container-highest rounded-lg">
+                  <span class="font-label-code-sm text-outline text-[10px]">CURRENT CGPA</span>
+                  <span class="font-headline-sm font-bold text-tertiary" id="cgpa-display">8.84</span>
+                </div>
+                <div class="flex flex-col items-end px-space-sm py-1 bg-surface-container-highest rounded-lg">
+                  <span class="font-label-code-sm text-outline text-[10px]">TARGET</span>
+                  <span class="font-headline-sm font-bold text-primary" id="target-cgpa-display">9.20</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Velocity Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs">
+          <button onclick="toggleQuickGoalInput()" class="flex items-center justify-center gap-2 py-2.5 px-space-sm bg-primary text-on-primary rounded-lg font-headline-sm text-sm font-semibold active:scale-95 transition-all shadow-md" type="button">
+            <span class="material-symbols-outlined text-[18px]">add_task</span>
+            <span>Add Goal</span>
+          </button>
+          <button onclick="switchView('study')" class="flex items-center justify-center gap-2 py-2.5 px-space-sm bg-surface-container-high text-on-surface rounded-lg font-headline-sm text-sm hover:bg-surface-container-highest cyber-border active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[18px] text-tertiary">play_circle</span>
+            <span>Pomodoro</span>
+          </button>
+          <button onclick="openModal('modal-add-test')" class="flex items-center justify-center gap-2 py-2.5 px-space-sm bg-surface-container-high text-on-surface rounded-lg font-headline-sm text-sm hover:bg-surface-container-highest cyber-border active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[18px] text-secondary">grade</span>
+            <span>Log Marks</span>
+          </button>
+          <button onclick="switchView('pyq')" class="flex items-center justify-center gap-2 py-2.5 px-space-sm bg-surface-container-high text-on-surface rounded-lg font-headline-sm text-sm hover:bg-surface-container-highest cyber-border active:scale-95 transition-all" type="button">
+            <span class="material-symbols-outlined text-[18px] text-primary">inventory_2</span>
+            <span>PYQ Bank</span>
+          </button>
+        </div>
+
+        <!-- Telemetry Metrics Grid (High Density) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-space-xs">
+          <!-- 1: Semester Progress -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low cyber-border shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-outline text-xs">SEM PROGRESS</span>
+              <span class="material-symbols-outlined text-[18px] text-primary">donut_large</span>
+            </div>
+            <div class="my-space-xs flex items-baseline justify-between">
+              <span class="font-headline-md font-bold text-on-surface" id="metric-sem-progress">64%</span>
+              <span class="font-label-code-sm text-tertiary text-xs">+3% this wk</span>
+            </div>
+            <div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+              <div class="bg-primary h-1.5 rounded-full" id="metric-sem-bar" style="width: 64%"></div>
+            </div>
+          </div>
+
+          <!-- 2: Study Hours -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low cyber-border shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-outline text-xs">STUDY TIME</span>
+              <span class="material-symbols-outlined text-[18px] text-secondary">hourglass_top</span>
+            </div>
+            <div class="my-space-xs flex items-baseline justify-between">
+              <span class="font-headline-md font-bold text-on-surface" id="metric-study-time">142.5h</span>
+              <span class="font-label-code-sm text-on-surface-variant text-xs">28.5h/wk</span>
+            </div>
+            <span class="font-label-code-sm text-outline text-[10px]" id="metric-study-sessions">58 Total Completed Sessions</span>
+          </div>
+
+          <!-- 3: Topics Velocity / Curriculum Topics -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low cyber-border shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-outline text-xs">CURRICULUM TOPICS</span>
+              <span class="material-symbols-outlined text-[18px] text-tertiary">checklist</span>
+            </div>
+            <div class="my-space-xs flex items-baseline justify-between">
+              <span class="font-headline-md font-bold text-on-surface" id="metric-topics-done">42 <span class="font-headline-sm text-outline">/ 68</span></span>
+              <span class="font-label-code-sm text-tertiary text-xs" id="metric-topics-inflight">61.7% done</span>
+            </div>
+            <div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+              <div class="bg-tertiary h-1.5 rounded-full" id="metric-topics-bar" style="width: 61.7%"></div>
+            </div>
+          </div>
+
+          <!-- 4: CA-2 Readiness / Tests & Evaluation -->
+          <div class="p-space-sm rounded-xl bg-surface-container-low cyber-border shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-outline text-xs">CA-2 READINESS</span>
+              <span class="material-symbols-outlined text-[18px] text-error">notification_important</span>
+            </div>
+            <div class="my-space-xs flex items-baseline justify-between">
+              <span class="font-headline-md font-bold text-error" id="metric-ca2-days">4 Days</span>
+              <span class="font-label-code-sm text-outline text-xs" id="metric-avg-eval">Avg 86.4%</span>
+            </div>
+            <div class="flex items-center justify-between text-[10px] font-label-code-sm">
+              <span class="text-on-surface-variant">2 Exams Pending</span>
+              <span class="text-tertiary">3 Assignments</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section A: Live Schedule & Examination Countdown -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+          <!-- Next Slotted Block Tile -->
+          <div class="p-space-md rounded-xl bg-surface-container-low cyber-border flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between mb-space-xs">
+              <span class="font-label-code-sm text-primary uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                Next Slotted Block
+              </span>
+              <span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-code-sm text-xs">45m Sprint</span>
+            </div>
+            <div class="space-y-1">
+              <h2 class="font-headline-sm font-semibold text-on-surface">Data Structures: Trees &amp; BST</h2>
+              <p class="font-body-sm text-on-surface-variant">Focus: AVL Rotations &amp; In-order Traversal mechanics</p>
+            </div>
+            <div class="mt-space-sm pt-space-xs flex items-center justify-between bg-surface-container p-space-sm rounded-lg cyber-border">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px] text-tertiary">schedule</span>
+                <span class="font-label-code-md text-on-surface font-semibold text-xs">Today @ 4:30 PM</span>
+              </div>
+              <button onclick="launchSlottedDeck()" class="px-3 py-1 rounded bg-primary text-on-primary font-headline-sm text-xs font-semibold active:scale-95 transition-transform" type="button">
+                Join Deck
+              </button>
+            </div>
+          </div>
+
+          <!-- Exam Countdown Telemetry -->
+          <div class="p-space-md rounded-xl bg-surface-container-low cyber-border flex flex-col justify-between shadow-sm relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-secondary/10 rounded-full blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-space-xs">
+              <span class="font-label-code-sm text-secondary uppercase tracking-wider text-xs">MAKAUT Milestone Clock</span>
+              <span class="px-2 py-0.5 rounded bg-secondary-container/40 text-on-secondary-container font-label-code-sm text-xs">SEM 3 FINAL</span>
+            </div>
+            <div class="flex items-center gap-space-md my-space-xs">
+              <div class="w-16 h-16 rounded-xl bg-surface-container-highest flex flex-col items-center justify-center shrink-0 cyber-border">
+                <span class="font-headline-xl font-bold text-secondary leading-none text-2xl">48</span>
+                <span class="font-label-code-sm text-outline mt-1 text-[10px]">DAYS</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span class="font-headline-sm font-semibold text-on-surface">Theory Examinations</span>
+                <span class="font-body-sm text-outline truncate text-xs">Scheduled Dec 2026 • 6 Theory + 4 Practical Papers</span>
+                <span class="font-label-code-sm text-tertiary mt-1 text-xs">Status: Syllabus on schedule</span>
+              </div>
+            </div>
+            <div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden mt-space-xs">
+              <div class="bg-secondary h-1.5 rounded-full" style="width: 72%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section B: Daily Goals Checklist -->
+        <div class="p-space-md rounded-xl bg-surface-container-low cyber-border shadow-sm flex flex-col space-y-space-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+              <h2 class="font-headline-sm font-semibold text-on-surface">Daily Academic Directives</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-label-code-sm text-tertiary text-xs" id="goals-count">3 of 5 Completed (60%)</span>
+            </div>
+          </div>
+          <!-- Progress Indicator Strip -->
+          <div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+            <div class="bg-tertiary h-1.5 rounded-full transition-all duration-300" id="goals-bar" style="width: 60%"></div>
+          </div>
+          <!-- Quick Add Input Dropdown -->
+          <div class="hidden flex gap-2 pt-2" id="goal-input-dialog">
+            <input class="flex-1 px-3 py-2 rounded-lg bg-surface-container text-on-surface text-sm cyber-border outline-none focus:border-primary" id="new-goal-text" placeholder="Type module task e.g. Solve 5 Recurrence relations..." type="text"/>
+            <button onclick="submitInlineGoal()" class="px-4 py-2 bg-primary text-on-primary font-headline-sm text-xs font-semibold rounded-lg shadow-sm" type="button">Add</button>
+          </div>
+          <!-- Goals Interactive Checklist -->
+          <div class="space-y-space-xs pt-space-xs" id="dashboard-goals-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Section C: Weekly Productivity Cadence Chart -->
+        <div class="p-space-md rounded-xl bg-surface-container-low cyber-border shadow-sm space-y-space-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+            <div>
+              <h2 class="font-headline-sm font-semibold text-on-surface">Weekly Productivity Cadence</h2>
+              <p class="font-body-sm text-outline text-xs">Logged Study Volume: 36.1 Hours logged across 7 days</p>
+            </div>
+            <div class="flex items-center gap-1.5 px-space-sm py-1 rounded bg-surface-container-highest self-start sm:self-auto cyber-border">
+              <span class="material-symbols-outlined text-[16px] text-secondary">bedtime</span>
+              <span class="font-label-code-sm text-on-surface text-xs">Peak: 9 PM – 1 AM (Night Owl)</span>
+            </div>
+          </div>
+          <!-- Inline 7-Day Micro Bar Chart with Luminance Layering -->
+          <div class="pt-space-sm">
+            <div class="grid grid-cols-7 gap-2 items-end h-32 px-space-xs pb-space-xs" id="weekly-cadence-bars">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section D: Subject Velocity Fast Cards -->
+        <div class="space-y-space-xs">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[20px] text-tertiary">menu_book</span>
+              <h2 class="font-headline-sm font-semibold text-on-surface">Curriculum Velocity</h2>
+            </div>
+            <span class="font-label-code-sm text-outline text-xs">6 Active Modules</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-xs" id="dashboard-subjects-grid">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 2: SUBJECTS & CURRICULUM -->
+      <!-- ========================================================================= -->
+      <section id="view-subjects" class="view-pane hidden flex flex-col space-y-space-md">
+        <!-- Ambience & Telemetry Header Banner -->
+        <div class="flex flex-col gap-space-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary cyber-border">
+                <span class="material-symbols-outlined text-[20px]">account_tree</span>
+              </span>
+              <div class="flex flex-col">
+                <span class="font-label-code-sm uppercase tracking-wider text-primary text-xs">Curriculum Matrix</span>
+                <span class="font-headline-md font-bold text-on-surface tracking-tight">Syllabus Tracker</span>
+              </div>
+            </div>
+            <span class="font-label-code-sm text-xs px-2.5 py-1 rounded-full bg-surface-container-highest text-tertiary font-semibold flex items-center gap-1 cyber-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>MAKAUT V3.4
+            </span>
+          </div>
+
+          <!-- Total Metric Bento Strip -->
+          <div class="bg-surface-container-low rounded-xl p-space-md cyber-border flex flex-col gap-space-sm shadow-md">
+            <div class="flex items-center justify-between">
+              <div class="flex items-baseline gap-space-xs">
+                <span class="font-headline-xl font-bold text-primary" id="curriculum-total-pct">64.7%</span>
+                <span class="font-label-code-md text-outline font-medium text-xs">TOTAL COVERAGE</span>
+              </div>
+              <div class="flex items-center gap-1.5 font-label-code-sm text-xs text-tertiary bg-tertiary/10 px-2.5 py-1 rounded-full">
+                <span class="material-symbols-outlined text-[14px]">trending_up</span>
+                <span>+6% this week</span>
+              </div>
+            </div>
+            <div class="w-full h-2 rounded-full bg-surface-container-highest overflow-hidden flex">
+              <div class="h-full bg-primary transition-all duration-500" id="curriculum-bar-done" style="width: 64.7%;"></div>
+            </div>
+            <!-- Micro Metric Pillars -->
+            <div class="grid grid-cols-4 gap-space-xs pt-space-xs text-center sm:text-left">
+              <div class="p-2 rounded-lg bg-surface-container cyber-border flex flex-col">
+                <span class="font-label-code-sm text-outline text-[10px]">ACTIVE</span>
+                <span class="font-headline-sm font-bold text-on-surface" id="stat-active-subjects">6</span>
+                <span class="font-label-code-sm text-outline text-[10px]">Subjects</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container cyber-border flex flex-col">
+                <span class="font-label-code-sm text-tertiary text-[10px]">DONE</span>
+                <span class="font-headline-sm font-bold text-tertiary" id="stat-topics-done">44</span>
+                <span class="font-label-code-sm text-outline text-[10px]">Topics</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container cyber-border flex flex-col">
+                <span class="font-label-code-sm text-secondary text-[10px]">ACTIVE</span>
+                <span class="font-headline-sm font-bold text-secondary" id="stat-topics-inflight">12</span>
+                <span class="font-label-code-sm text-outline text-[10px]">In-Flight</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container cyber-border flex flex-col">
+                <span class="font-label-code-sm text-outline text-[10px]">QUEUE</span>
+                <span class="font-headline-sm font-bold text-outline" id="stat-topics-pending">12</span>
+                <span class="font-label-code-sm text-outline text-[10px]">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="flex flex-col gap-space-sm">
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined text-[20px] text-outline absolute left-3 pointer-events-none">search</span>
+            <input class="w-full h-11 pl-10 pr-4 rounded-xl bg-surface-container-high cyber-border text-sm font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary transition-colors" id="topicSearchInput" placeholder="Search topics, modules, codes (e.g. Trees, BSC-M301, Cache)..." type="text"/>
+          </div>
+
+          <!-- Quick Action Launchers & Category Filter Pills -->
+          <div class="flex items-center justify-between gap-space-xs flex-wrap">
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1" id="categoryFilterGroup">
+              <button onclick="filterSubjectsByCategory('all', this)" class="subj-filter-pill px-3 py-1.5 rounded-full font-label-code-sm text-xs font-semibold bg-primary text-on-primary shadow-sm">All (6)</button>
+              <button onclick="filterSubjectsByCategory('Basic Science', this)" class="subj-filter-pill px-3 py-1.5 rounded-full font-label-code-sm text-xs bg-surface-container-high text-on-surface-variant cyber-border">Basic Science (1)</button>
+              <button onclick="filterSubjectsByCategory('Core CSE', this)" class="subj-filter-pill px-3 py-1.5 rounded-full font-label-code-sm text-xs bg-surface-container-high text-on-surface-variant cyber-border">Core CSE (3)</button>
+              <button onclick="filterSubjectsByCategory('Engineering Science', this)" class="subj-filter-pill px-3 py-1.5 rounded-full font-label-code-sm text-xs bg-surface-container-high text-on-surface-variant cyber-border">Engg Science (1)</button>
+              <button onclick="filterSubjectsByCategory('Humanities', this)" class="subj-filter-pill px-3 py-1.5 rounded-full font-label-code-sm text-xs bg-surface-container-high text-on-surface-variant cyber-border">Humanities (1)</button>
+            </div>
+
+            <div class="flex items-center gap-space-xs">
+              <button onclick="openModal('modal-add-subject')" class="flex items-center gap-1.5 h-9 px-3 rounded-lg bg-primary text-on-primary font-headline-sm text-xs font-semibold active:scale-95 transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                <span>+ Add Subject</span>
+              </button>
+              <button onclick="openModal('modal-add-topic')" class="flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-container-high text-primary hover:bg-surface-container-highest cyber-border font-headline-sm text-xs font-medium active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-[16px]">playlist_add</span>
+                <span>+ Add Topic</span>
+              </button>
+              <button onclick="toggleAllAccordions()" class="flex items-center gap-1 h-9 px-3 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface cyber-border font-label-code-sm text-xs active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-[16px]">unfold_more</span>
+                <span>Toggle All</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Search Results Container -->
+        <div id="topics-search-results" class="hidden"></div>
+
+        <!-- Subject Cards List -->
+        <div id="subjects-cards-list" class="flex flex-col space-y-space-md">
+          <!-- Rendered via JS with collapsible topics, notes, and revision toggles -->
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 3: STUDY SESSIONS (POMODORO) -->
+      <!-- ========================================================================= -->
+      <section id="view-study" class="view-pane hidden flex flex-col space-y-space-md">
+        <!-- Tactical Directive Banner -->
+        <div class="bg-surface-container-high rounded-xl p-space-sm cyber-border shadow-md flex items-center justify-between">
+          <div class="flex items-center gap-space-sm min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 cyber-border">
+              <span class="material-symbols-outlined text-[20px]">bolt</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="font-headline-sm text-on-surface truncate">Neural Deep Work Engine</span>
+              <span class="font-label-code-sm text-tertiary uppercase tracking-wider text-[10px]">Status: Phase 3 Lockdown • High Flow</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1 rounded-full text-on-surface-variant cyber-border">
+            <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            <span class="font-label-code-sm text-tertiary text-xs">2.4x VELOCITY</span>
+          </div>
+        </div>
+
+        <!-- Primary Pomodoro Focus Console -->
+        <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-xl flex flex-col space-y-space-md relative overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <!-- Mode Selector Toggles -->
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest p-1 rounded-lg cyber-border">
+            <button class="timer-mode-btn py-2 px-1 rounded font-label-code-sm flex flex-col items-center justify-center bg-primary text-on-primary font-semibold transition-all" onclick="switchTimerMode('focus', 25, this)">
+              <span>FOCUS</span>
+              <span class="opacity-80 text-[10px]">25m</span>
+            </button>
+            <button class="timer-mode-btn py-2 px-1 rounded font-label-code-sm flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" onclick="switchTimerMode('short', 5, this)">
+              <span>SHORT BREAK</span>
+              <span class="opacity-80 text-[10px]">5m</span>
+            </button>
+            <button class="timer-mode-btn py-2 px-1 rounded font-label-code-sm flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" onclick="switchTimerMode('long', 15, this)">
+              <span>LONG BREAK</span>
+              <span class="opacity-80 text-[10px]">15m</span>
+            </button>
+          </div>
+
+          <!-- Circular Dial Gauge & Telemetry Timer -->
+          <div class="flex flex-col items-center justify-center py-space-sm relative">
+            <div class="relative w-56 h-56 flex items-center justify-center">
+              <svg class="w-full h-full -rotate-90 transform" viewbox="0 0 100 100">
+                <circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="43" stroke="currentColor" stroke-width="4"></circle>
+                <circle class="text-primary transition-all duration-1000" cx="50" cy="50" fill="none" id="timer-stroke" r="43" stroke="currentColor" stroke-dasharray="270" stroke-dashoffset="0" stroke-linecap="round" stroke-width="4"></circle>
+              </svg>
+              <!-- Digital Chronometer Readout -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span class="font-label-code-sm text-outline uppercase tracking-widest text-[10px]">INTERVAL 2/2</span>
+                <span class="font-headline-xl text-3xl sm:text-4xl font-bold tracking-tight text-on-surface my-1" id="countdown-display">25:00</span>
+                <div class="flex items-center gap-1 text-tertiary">
+                  <span class="material-symbols-outlined text-[14px]">psychology</span>
+                  <span class="font-label-code-sm text-[10px]">SYNAPSE ACTIVE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cycle Target Chip -->
+            <div class="mt-space-xs flex items-center gap-2 bg-surface-container-low px-space-md py-1 rounded-full cyber-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+              <span class="font-label-code-sm text-outline text-[11px]">CYCLE TARGET: 50 MINS (2 POMODOROS)</span>
+            </div>
+          </div>
+
+          <!-- Primary Control Switches -->
+          <div class="grid grid-cols-4 gap-space-xs">
+            <button id="btn-toggle-timer" onclick="toggleTimer()" class="col-span-2 py-3 px-space-sm bg-tertiary text-on-tertiary rounded-xl font-headline-sm flex items-center justify-center gap-space-xs shadow-md active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-[20px]" id="play-icon">play_arrow</span>
+              <span id="play-label">Start Session</span>
+            </button>
+            <button onclick="promptEndSession()" class="col-span-1 py-3 bg-surface-container-high hover:bg-surface-container-highest text-error rounded-xl font-label-code-sm text-xs flex flex-col items-center justify-center gap-0.5 cyber-border active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-[18px]">stop_circle</span>
+              <span>End</span>
+            </button>
+            <button onclick="resetTimer()" class="col-span-1 py-3 bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant rounded-xl font-label-code-sm text-xs flex flex-col items-center justify-center gap-0.5 cyber-border active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Active Session Metadata Controller -->
+          <div class="bg-surface-container-high rounded-xl p-space-md cyber-border flex flex-col space-y-space-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-outline uppercase tracking-wider text-xs">Syllabus Alignment</span>
+              <span class="font-label-code-sm bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs" id="active-module-pill">MAKAUT PCC-CS301</span>
+            </div>
+            <!-- Course Module Selector -->
+            <div class="flex flex-col space-y-1">
+              <label class="font-label-code-sm text-on-surface-variant text-xs" for="pomodoro-subject-select">Course Module</label>
+              <div class="relative bg-surface-container-lowest rounded-lg cyber-border">
+                <select class="w-full bg-transparent text-on-surface font-body-md text-sm py-2 px-space-sm rounded-lg appearance-none focus:outline-none cursor-pointer" id="pomodoro-subject-select">
+                  <!-- Populated dynamically -->
+                </select>
+                <div class="absolute right-3 top-2.5 pointer-events-none text-on-surface-variant">
+                  <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                </div>
+              </div>
+            </div>
+            <!-- Target Section Specifier -->
+            <div class="flex flex-col space-y-1">
+              <label class="font-label-code-sm text-on-surface-variant text-xs" for="pomodoro-target-input">Target Section / Problem Set</label>
+              <input class="w-full bg-surface-container-lowest text-on-surface font-body-md text-sm py-2 px-space-sm rounded-lg cyber-border focus:outline-none focus:border-primary" id="pomodoro-target-input" type="text" value="Trees &amp; Binary Search Trees - AVL Balancing"/>
+            </div>
+            <!-- Micro Notes Scratchpad -->
+            <div class="flex flex-col space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="font-label-code-sm text-on-surface-variant text-xs" for="pomodoro-notes">Scratchpad &amp; Algorithm Notes</label>
+                <span class="font-label-code-sm text-tertiary text-[10px]">Autosaved</span>
+              </div>
+              <textarea class="w-full bg-surface-container-lowest text-on-surface font-body-sm text-xs p-space-sm rounded-lg cyber-border focus:outline-none focus:border-primary resize-none h-16" id="pomodoro-notes">Deriving time complexity of tree height rotation: LL &amp; RR require single rotation O(1), LR &amp; RL need double rotation.</textarea>
+            </div>
+            <!-- Completion Checkbox Toggle -->
+            <label class="flex items-center gap-space-sm p-space-xs bg-surface-container-lowest rounded-lg cursor-pointer cyber-border">
+              <input checked="" class="w-4 h-4 rounded text-primary bg-surface-container focus:ring-0" id="pomodoro-completion-toggle" type="checkbox"/>
+              <span class="font-body-sm text-on-surface text-xs">Mark current topic as Completed upon session end</span>
+            </label>
+          </div>
+
+          <!-- Ambient Audio Matrix (Web Audio API Synthesizer) -->
+          <div class="bg-surface-container-low rounded-xl p-space-sm cyber-border flex flex-col space-y-space-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 text-on-surface">
+                <span class="material-symbols-outlined text-[18px] text-secondary">graphic_eq</span>
+                <span class="font-label-code-sm uppercase tracking-wide text-xs">Acoustic Immersion</span>
+              </div>
+              <span class="font-label-code-sm text-tertiary text-xs" id="ambient-status">Audio Muted</span>
+            </div>
+            <div class="grid grid-cols-3 gap-space-xs">
+              <button class="sound-pill py-1.5 px-space-xs rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-label-code-sm text-xs flex items-center justify-center gap-1 cyber-border transition-all" onclick="selectAcousticSound(this, 'Rain Sound')">
+                <span class="material-symbols-outlined text-[16px]">rainy</span>
+                <span>Rainfall</span>
+              </button>
+              <button class="sound-pill py-1.5 px-space-xs rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-label-code-sm text-xs flex items-center justify-center gap-1 cyber-border transition-all" onclick="selectAcousticSound(this, 'Lo-Fi Cyber')">
+                <span class="material-symbols-outlined text-[16px]">headphones</span>
+                <span>Lo-Fi Cyber</span>
+              </button>
+              <button class="sound-pill py-1.5 px-space-xs rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-label-code-sm text-xs flex items-center justify-center gap-1 cyber-border transition-all" onclick="selectAcousticSound(this, 'White Noise')">
+                <span class="material-symbols-outlined text-[16px]">waves</span>
+                <span>White Noise</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry & Academic Velocity Dashboard -->
+        <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col space-y-space-md">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">query_stats</span>
+              <span class="font-headline-sm text-on-surface">Study Velocity Telemetry</span>
+            </div>
+            <span class="font-label-code-sm text-outline text-xs">UPDATED REALTIME</span>
+          </div>
+          <!-- 3-Way Metrics Banner -->
+          <div class="grid grid-cols-3 gap-space-xs">
+            <!-- Metric 1: Today -->
+            <div class="bg-surface-container-high rounded-xl p-space-sm cyber-border flex flex-col justify-between">
+              <span class="font-label-code-sm text-on-surface-variant text-xs">TODAY</span>
+              <div class="my-1">
+                <span class="font-headline-sm font-bold text-primary" id="pomodoro-today-time">3h 45m</span>
+              </div>
+              <div class="flex flex-col space-y-1">
+                <div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-primary h-full rounded-full" style="width: 75%;"></div>
+                </div>
+                <span class="font-label-code-sm text-outline text-[10px]">Goal: 5h (75%)</span>
+              </div>
+            </div>
+            <!-- Metric 2: Weekly -->
+            <div class="bg-surface-container-high rounded-xl p-space-sm cyber-border flex flex-col justify-between">
+              <span class="font-label-code-sm text-on-surface-variant text-xs">WEEK TOTAL</span>
+              <div class="my-1">
+                <span class="font-headline-sm font-bold text-tertiary">28.5 hrs</span>
+              </div>
+              <div class="flex items-center gap-1 text-tertiary text-xs">
+                <span class="material-symbols-outlined text-[14px]">trending_up</span>
+                <span class="font-label-code-sm">+4.2 hrs vs Wk 41</span>
+              </div>
+            </div>
+            <!-- Metric 3: Monthly -->
+            <div class="bg-surface-container-high rounded-xl p-space-sm cyber-border flex flex-col justify-between">
+              <span class="font-label-code-sm text-on-surface-variant text-xs">MONTH TOTAL</span>
+              <div class="my-1">
+                <span class="font-headline-sm font-bold text-secondary">114.2 hrs</span>
+              </div>
+              <span class="font-label-code-sm text-outline text-[10px]">Pace: 98% MAKAUT</span>
+            </div>
+          </div>
+          <!-- Curricular Distribution Analytics Chart -->
+          <div class="bg-surface-container-high rounded-xl p-space-md cyber-border flex flex-col space-y-space-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-label-code-sm text-on-surface uppercase tracking-wide text-xs">Subject Time Allocation</span>
+              <span class="font-label-code-sm text-primary text-xs">100% Normalized</span>
+            </div>
+            <!-- Stacked Distribution Bar -->
+            <div class="h-3 w-full bg-surface-container-lowest rounded-full overflow-hidden flex">
+              <div class="bg-primary h-full" style="width: 35%;" title="DSA (35%)"></div>
+              <div class="bg-secondary h-full" style="width: 25%;" title="Maths III (25%)"></div>
+              <div class="bg-tertiary h-full" style="width: 20%;" title="Computer Org (20%)"></div>
+              <div class="bg-error h-full" style="width: 12%;" title="Electronics (12%)"></div>
+              <div class="bg-surface-bright h-full" style="width: 8%;" title="Python (8%)"></div>
+            </div>
+            <!-- Legend & Individual Metrics -->
+            <div class="grid grid-cols-2 gap-y-2 gap-x-space-md pt-space-xs font-label-code-sm text-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+                  <span class="text-on-surface truncate">DSA</span>
+                </div>
+                <span class="text-on-surface-variant">35% (39.9h)</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span>
+                  <span class="text-on-surface truncate">Maths III</span>
+                </div>
+                <span class="text-on-surface-variant">25% (28.5h)</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-2 h-2 rounded-full bg-tertiary shrink-0"></span>
+                  <span class="text-on-surface truncate">Comp Org</span>
+                </div>
+                <span class="text-on-surface-variant">20% (22.8h)</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+                  <span class="text-on-surface truncate">Electronics</span>
+                </div>
+                <span class="text-on-surface-variant">12% (13.7h)</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-2 h-2 rounded-full bg-surface-bright shrink-0"></span>
+                  <span class="text-on-surface truncate">Python IT</span>
+                </div>
+                <span class="text-on-surface-variant">8% (9.1h)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Study Blocks Ledger -->
+        <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col">
+          <h3 class="font-headline-sm font-bold text-on-surface flex items-center gap-2 mb-space-sm">
+            <span class="material-symbols-outlined text-primary text-[20px]">history</span>
+            <span>Recent Sessions Ledger</span>
+          </h3>
+          <div class="flex flex-col gap-2 overflow-y-auto max-h-60" id="study-history-list">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 4: TESTS & ACADEMIC EVALUATION -->
+      <!-- ========================================================================= -->
+      <section id="view-tests" class="view-pane hidden flex flex-col space-y-space-md">
+        <!-- Performance Snapshot Header Card -->
+        <div class="bg-surface-container-high rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-space-md relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="p-1.5 rounded-lg bg-primary/10 text-primary flex items-center justify-center cyber-border">
+                <span class="material-symbols-outlined text-[20px]">insights</span>
+              </span>
+              <span class="font-headline-sm font-bold text-on-surface">Academic Telemetry</span>
+            </div>
+            <span class="font-label-code-sm text-xs text-tertiary bg-tertiary/10 px-2.5 py-0.5 rounded-full font-semibold cyber-border">
+              MAKAUT B.TECH CS301
+            </span>
+          </div>
+
+          <!-- Hero Stats Grid -->
+          <div class="grid grid-cols-2 gap-space-sm">
+            <div class="bg-surface-container rounded-lg p-space-sm cyber-border flex flex-col">
+              <span class="font-label-code-sm text-outline uppercase tracking-wider text-[10px]">Cumulative CGPA</span>
+              <div class="flex items-baseline gap-1 mt-0.5">
+                <span class="font-headline-lg font-bold text-primary" id="eval-cumulative-cgpa">8.84</span>
+                <span class="font-label-code-sm text-outline text-xs">/ 10.0</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1 text-tertiary text-xs">
+                <span class="material-symbols-outlined text-[14px]">flag</span>
+                <span class="font-label-code-sm">Target: <span id="eval-target-cgpa">9.20</span></span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container rounded-lg p-space-sm cyber-border flex flex-col">
+              <span class="font-label-code-sm text-outline uppercase tracking-wider text-[10px]">Avg Evaluation</span>
+              <div class="flex items-baseline gap-1 mt-0.5">
+                <span class="font-headline-lg font-bold text-secondary" id="eval-avg-score">86.4%</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-[14px]">task_alt</span>
+                <span class="font-label-code-sm" id="eval-tests-count">14 Tests Logged</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SGPA Trajectory Pill Strip -->
+          <div class="bg-surface-container-low rounded-lg p-space-sm cyber-border flex items-center justify-between">
+            <div class="flex flex-col items-center flex-1">
+              <span class="font-label-code-sm text-outline text-[10px]">SEM 1</span>
+              <span class="font-label-code-md font-semibold text-on-surface mt-0.5">8.70</span>
+            </div>
+            <div class="w-px h-6 bg-surface-container-highest"></div>
+            <div class="flex flex-col items-center flex-1">
+              <span class="font-label-code-sm text-outline text-[10px]">SEM 2</span>
+              <span class="font-label-code-md font-semibold text-on-surface mt-0.5">8.92</span>
+            </div>
+            <div class="w-px h-6 bg-surface-container-highest"></div>
+            <div class="flex flex-col items-center flex-1">
+              <span class="font-label-code-sm text-primary font-semibold text-[10px]">SEM 3 PROJ</span>
+              <span class="font-label-code-md font-semibold text-primary mt-0.5">8.95</span>
+            </div>
+          </div>
+
+          <!-- Top Score Highlight -->
+          <div class="flex items-center gap-space-sm bg-surface-container px-space-sm py-2 rounded-lg cyber-border">
+            <span class="material-symbols-outlined text-tertiary text-[18px]">verified</span>
+            <div class="flex items-center justify-between flex-1 min-w-0">
+              <span class="font-body-sm text-on-surface-variant truncate text-xs">Top Score: Python DSA Practical</span>
+              <span class="font-label-code-sm text-tertiary font-bold ml-2 text-xs" id="eval-top-score">96.0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Quick Marks Entry Form Panel -->
+        <section class="bg-surface-container-high rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-space-md" id="marks-entry-panel">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
+              <span class="font-headline-sm font-bold text-on-surface">Quick Marks Logger</span>
+            </div>
+            <span class="font-label-code-sm text-xs text-on-surface-variant bg-surface-container px-2 py-0.5 rounded cyber-border">Active Session</span>
+          </div>
+          <form class="flex flex-col gap-space-sm" id="marks-calc-form" onsubmit="handleInlineMarksSubmit(event)">
+            <div class="flex flex-col gap-1">
+              <label class="font-label-code-sm text-xs text-on-surface-variant uppercase" for="quick-marks-subject">Select Subject</label>
+              <select class="bg-surface-container text-on-surface font-body-md text-sm rounded-lg px-3 py-2.5 cyber-border focus:outline-none" id="quick-marks-subject">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-space-sm">
+              <div class="flex flex-col gap-1">
+                <label class="font-label-code-sm text-xs text-on-surface-variant uppercase" for="quick-marks-total">Total Marks</label>
+                <input class="bg-surface-container text-on-surface font-label-code-md text-sm rounded-lg px-3 py-2.5 cyber-border focus:outline-none" id="quick-marks-total" min="1" type="number" value="25"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="font-label-code-sm text-xs text-on-surface-variant uppercase" for="quick-marks-obtained">Obtained</label>
+                <input class="bg-surface-container text-on-surface font-label-code-md text-sm rounded-lg px-3 py-2.5 cyber-border focus:outline-none" id="quick-marks-obtained" min="0" type="number" value="22"/>
+              </div>
+            </div>
+            <!-- Realtime Auto-calculation Output -->
+            <div class="bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between cyber-border">
+              <span class="font-body-sm text-xs text-on-surface-variant">Computed Yield:</span>
+              <div class="flex items-center gap-1.5">
+                <span class="font-label-code-md font-bold text-tertiary text-sm" id="quick-computed-percent">88.0%</span>
+                <span class="font-label-code-sm text-xs px-1.5 py-0.5 rounded bg-tertiary/10 text-tertiary font-bold" id="quick-grade-chip">EXCELLENT</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="font-label-code-sm text-xs text-on-surface-variant uppercase" for="quick-eval-remarks">Evaluator Remarks / Focus Area</label>
+              <input class="bg-surface-container text-on-surface font-body-sm text-sm rounded-lg px-3 py-2 cyber-border focus:outline-none" id="quick-eval-remarks" placeholder="e.g. Mastered recursion, brush up hash collision" type="text"/>
+            </div>
+            <button class="w-full bg-primary text-on-primary font-headline-sm text-sm font-semibold py-2.5 rounded-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mt-1 shadow-md" type="submit">
+              <span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+              <span>Commit Marks Entry</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Filter Category Horizontal Rail -->
+        <section class="flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-label-code-sm text-outline uppercase tracking-wider text-xs">Evaluation Domain</span>
+            <span class="font-label-code-sm text-primary text-xs">6 Categories</span>
+          </div>
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="evalDomainFilterGroup">
+            <button onclick="filterTestsByDomain('all', this)" class="test-domain-pill bg-primary text-on-primary px-3 py-1.5 rounded-full font-label-code-sm text-xs font-semibold shrink-0">All (14)</button>
+            <button onclick="filterTestsByDomain('CA', this)" class="test-domain-pill bg-surface-container text-on-surface-variant px-3 py-1.5 rounded-full font-label-code-sm text-xs shrink-0 cyber-border">Class Assessment (CA)</button>
+            <button onclick="filterTestsByDomain('PCA', this)" class="test-domain-pill bg-surface-container text-on-surface-variant px-3 py-1.5 rounded-full font-label-code-sm text-xs shrink-0 cyber-border">Practical (PCA)</button>
+            <button onclick="filterTestsByDomain('Mock', this)" class="test-domain-pill bg-surface-container text-on-surface-variant px-3 py-1.5 rounded-full font-label-code-sm text-xs shrink-0 cyber-border">Mock Tests</button>
+            <button onclick="filterTestsByDomain('Viva', this)" class="test-domain-pill bg-surface-container text-on-surface-variant px-3 py-1.5 rounded-full font-label-code-sm text-xs shrink-0 cyber-border">Viva Prep</button>
+          </div>
+        </section>
+
+        <!-- Subject Performance Bars & Assessment Trajectory -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+          <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-space-sm">
+            <h3 class="font-headline-sm font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">bar_chart</span>
+              <span>Subject-wise Velocity Breakdown</span>
+            </h3>
+            <div class="flex flex-col gap-3 mt-2" id="eval-subject-performance-bars">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Trend Curve & Interventions -->
+          <div class="flex flex-col gap-space-md">
+            <!-- Curve SVG -->
+            <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-space-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-label-code-sm text-on-surface-variant text-xs">Assessment Trajectory</span>
+                <span class="font-label-code-sm text-tertiary text-xs flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">trending_up</span> +7.2% vs CA-1
+                </span>
+              </div>
+              <div class="w-full h-24 pt-2">
+                <svg class="w-full h-full overflow-visible" fill="none" viewbox="0 0 320 80">
+                  <defs>
+                    <linearGradient id="curveGradient" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#adc6ff" stop-opacity="0.35"></stop>
+                      <stop offset="100%" stop-color="#adc6ff" stop-opacity="0.0"></stop>
+                    </linearGradient>
+                  </defs>
+                  <line stroke="#313540" stroke-dasharray="2 2" stroke-width="1" x1="10" x2="310" y1="20" y2="20"></line>
+                  <line stroke="#313540" stroke-dasharray="2 2" stroke-width="1" x1="10" x2="310" y1="50" y2="50"></line>
+                  <path d="M 20 62 L 95 44 L 170 48 L 245 28 L 300 20 L 300 80 L 20 80 Z" fill="url(#curveGradient)"></path>
+                  <path d="M 20 62 Q 60 50 95 44 T 170 48 T 245 28 T 300 20" stroke="#adc6ff" stroke-linecap="round" stroke-width="3"></path>
+                  <circle class="fill-surface" cx="20" cy="62" r="3.5" stroke="#adc6ff" stroke-width="2"></circle>
+                  <circle class="fill-surface" cx="95" cy="44" r="3.5" stroke="#adc6ff" stroke-width="2"></circle>
+                  <circle class="fill-surface" cx="170" cy="48" r="3.5" stroke="#adc6ff" stroke-width="2"></circle>
+                  <circle class="fill-surface" cx="245" cy="28" r="3.5" stroke="#adc6ff" stroke-width="2"></circle>
+                  <circle class="fill-tertiary" cx="300" cy="20" r="4.5"></circle>
+                </svg>
+              </div>
+              <div class="flex justify-between font-label-code-sm text-outline px-1 text-[10px]">
+                <span>Diag Test</span>
+                <span>CA-1</span>
+                <span>PCA-1</span>
+                <span>Mock Mid</span>
+                <span class="text-tertiary font-bold">CA-2 Projected</span>
+              </div>
+            </div>
+
+            <!-- Interventions -->
+            <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-error">
+                <span class="material-symbols-outlined text-[16px]">priority_high</span>
+                <span class="font-label-code-sm font-semibold uppercase text-xs">Areas Requiring Intervention</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5" id="intervention-chips">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Ledger List -->
+        <div class="bg-surface-container rounded-xl p-space-md cyber-border shadow-md flex flex-col gap-space-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+              <h3 class="font-headline-sm font-bold text-on-surface">Evaluations Ledger</h3>
+            </div>
+            <span class="font-label-code-sm text-outline text-xs" id="evals-displayed-count">Official Records</span>
+          </div>
+          <div class="flex flex-col gap-space-sm mt-2" id="evaluations-ledger-list">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 5: PYQ BANK & VAULT -->
+      <!-- ========================================================================= -->
+      <section id="view-pyq" class="view-pane hidden flex flex-col space-y-space-md">
+        <div class="bg-surface-container-high rounded-xl p-space-md cyber-border shadow-md flex items-center justify-between">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary cyber-border">
+              <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+            </div>
+            <div>
+              <h2 class="font-headline-md font-bold text-on-surface">MAKAUT PYQ Vault (2020–2025)</h2>
+              <p class="font-body-sm text-outline text-xs">Past 5 years examination papers with step-by-step model solutions</p>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded bg-surface-container text-tertiary font-label-code-sm text-xs cyber-border font-bold">MAKAUT VERIFIED</span>
+        </div>
+
+        <!-- Filter PYQs -->
+        <div class="flex gap-2">
+          <input type="text" id="pyq-search-input" placeholder="Search questions (e.g. AVL rotation, Stokes theorem, Cache)..." class="flex-1 h-11 px-3 rounded-lg bg-surface-container cyber-border text-sm text-on-surface focus:outline-none focus:border-primary" oninput="filterPyqLive(this.value)">
+          <select id="pyq-year-select" class="h-11 px-3 rounded-lg bg-surface-container cyber-border text-xs text-on-surface focus:outline-none cursor-pointer" onchange="filterPyqByYear(this.value)">
+            <option value="all">All Years</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+        </div>
+
+        <!-- PYQ Cards List -->
+        <div class="flex flex-col gap-space-sm" id="pyq-cards-list">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 6: DAILY GOALS (FULL VIEW) -->
+      <!-- ========================================================================= -->
+      <section id="view-goals" class="view-pane hidden flex flex-col space-y-space-md">
+        <div class="bg-surface-container-high rounded-xl p-space-md cyber-border shadow-md flex items-center justify-between">
+          <div>
+            <h2 class="font-headline-md font-bold text-on-surface">Daily Academic Velocity Goals</h2>
+            <p class="font-body-sm text-outline text-xs">Track daily engineering milestones and study tasks</p>
+          </div>
+          <button onclick="openModal('modal-add-goal')" class="px-3.5 py-2 rounded-lg bg-primary text-on-primary font-headline-sm text-xs font-semibold flex items-center gap-1 shadow-md">
+            <span class="material-symbols-outlined text-[18px]">add_task</span>
+            <span>+ Add Goal</span>
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-space-sm" id="goals-full-list">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="md:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface/90 backdrop-blur-xl cyber-border shadow-[0_-1px_12px_rgba(0,0,0,0.5)]">
+    <div class="flex items-center justify-around h-16 px-space-xs">
+      <button onclick="switchView('dashboard')" data-view-target="dashboard" class="flex flex-col items-center justify-center min-w-[56px] h-12 text-primary font-semibold transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span class="font-label-code-sm text-[10px] mt-0.5">Overview</span>
+      </button>
+      <button onclick="switchView('subjects')" data-view-target="subjects" class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+        <span class="font-label-code-sm text-[10px] mt-0.5">Subjects</span>
+      </button>
+      <button onclick="switchView('study')" data-view-target="study" class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[20px]">timer</span>
+        <span class="font-label-code-sm text-[10px] mt-0.5">Study</span>
+      </button>
+      <button onclick="switchView('goals')" data-view-target="goals" class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[20px]">task_alt</span>
+        <span class="font-label-code-sm text-[10px] mt-0.5">Goals</span>
+      </button>
+      <button onclick="switchView('tests')" data-view-target="tests" class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[20px]">history_edu</span>
+        <span class="font-label-code-sm text-[10px] mt-0.5">Tests</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================================= -->
+
+  <!-- Modal: Add Goal -->
+  <div id="modal-add-goal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-surface-container rounded-2xl cyber-border p-space-lg w-full max-w-md shadow-2xl relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">add_task</span>
+          <span>Add Academic Goal</span>
+        </h3>
+        <button onclick="closeModal('modal-add-goal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <form onsubmit="handleCreateGoal(event)" class="flex flex-col gap-3">
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Goal Description</label>
+          <input type="text" id="goal-title-input" required placeholder="e.g. Master AVL tree rotations" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface focus:outline-none focus:border-primary text-sm">
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Subject</label>
+          <select id="goal-subject-select" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface focus:outline-none text-sm"></select>
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Priority</label>
+          <select id="goal-priority-select" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface focus:outline-none text-sm">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+          <button type="button" onclick="closeModal('modal-add-goal')" class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold text-sm">Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Log Test Marks -->
+  <div id="modal-add-test" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-surface-container rounded-2xl cyber-border p-space-lg w-full max-w-md shadow-2xl relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">grade</span>
+          <span>Log Test Marks</span>
+        </h3>
+        <button onclick="closeModal('modal-add-test')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <form onsubmit="handleCreateTest(event)" class="flex flex-col gap-3">
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Subject</label>
+          <select id="test-subject-select" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm"></select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Assessment Type</label>
+            <input type="text" id="test-type-input" required placeholder="e.g. CA-2 Assessment" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Domain</label>
+            <select id="test-domain-select" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+              <option value="CA">Class Assessment (CA)</option>
+              <option value="PCA">Practical (PCA)</option>
+              <option value="Mock">Mock Test</option>
+              <option value="Viva">Viva Exam</option>
+              <option value="Semester">Semester Final</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Max Marks</label>
+            <input type="number" id="test-max-marks" step="0.5" required placeholder="25" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Obtained Marks</label>
+            <input type="number" id="test-obtained-marks" step="0.5" required placeholder="22.5" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+        </div>
+        <div class="flex items-center justify-between px-2 py-1 bg-surface-container-low rounded cyber-border text-xs font-label-code-sm">
+          <span class="text-outline">Calculated Score:</span>
+          <span id="live-score-preview" class="text-tertiary font-bold">0.0% score</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Weightage (%)</label>
+            <input type="number" id="test-weightage" step="1" value="15" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Evaluator Remarks</label>
+            <input type="text" id="test-notes-input" placeholder="e.g. Mastered recursion" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+          <button type="button" onclick="closeModal('modal-add-test')" class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold text-sm">Commit Marks</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Subject -->
+  <div id="modal-add-subject" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-surface-container rounded-2xl cyber-border p-space-lg w-full max-w-md shadow-2xl relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">menu_book</span>
+          <span>Add Curriculum Subject</span>
+        </h3>
+        <button onclick="closeModal('modal-add-subject')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <form onsubmit="handleCreateSubject(event)" class="flex flex-col gap-3">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Course Code</label>
+            <input type="text" id="new-sub-code" required placeholder="e.g. PCC-CS303" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Credits</label>
+            <input type="number" id="new-sub-credits" step="0.5" value="4.0" required class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Subject Name</label>
+          <input type="text" id="new-sub-name" required placeholder="e.g. Formal Language & Automata" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Category</label>
+            <select id="new-sub-category" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+              <option value="Core CSE">Core CSE</option>
+              <option value="Basic Science">Basic Science</option>
+              <option value="Engineering Science">Engineering Science</option>
+              <option value="Humanities">Humanities</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Color Theme</label>
+            <select id="new-sub-color" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+              <option value="primary">Primary (Blue)</option>
+              <option value="secondary">Secondary (Violet)</option>
+              <option value="tertiary">Tertiary (Emerald)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Faculty / Professor</label>
+          <input type="text" id="new-sub-prof" placeholder="e.g. Prof. Roy" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+          <button type="button" onclick="closeModal('modal-add-subject')" class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold text-sm">Save Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Topic -->
+  <div id="modal-add-topic" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-surface-container rounded-2xl cyber-border p-space-lg w-full max-w-md shadow-2xl relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">playlist_add</span>
+          <span>Add Syllabus Topic</span>
+        </h3>
+        <button onclick="closeModal('modal-add-topic')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <form onsubmit="handleCreateTopic(event)" class="flex flex-col gap-3">
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Subject</label>
+          <select id="topic-subject-select" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm"></select>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Unit #</label>
+            <input type="number" id="topic-unit-num" min="1" max="10" value="1" required class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div class="col-span-2">
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Unit Name</label>
+            <input type="text" id="topic-unit-name" required placeholder="e.g. Graph Theory" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Topic Title</label>
+          <input type="text" id="topic-title" required placeholder="e.g. Floyd-Warshall All-Pairs Algorithm" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Difficulty</label>
+          <select id="topic-difficulty" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate" selected>Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+          <button type="button" onclick="closeModal('modal-add-topic')" class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold text-sm">Add Topic</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Preferences & Profile Target -->
+  <div id="modal-profile-edit" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-surface-container rounded-2xl cyber-border p-space-lg w-full max-w-md shadow-2xl relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline-md font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">tune</span>
+          <span>System Preferences & Target</span>
+        </h3>
+        <button onclick="closeModal('modal-profile-edit')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <form onsubmit="handleProfileUpdate(event)" class="flex flex-col gap-3">
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Student Name</label>
+          <input type="text" id="pref-name" required value="Akashdip Sah" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Current CGPA</label>
+            <input type="number" id="pref-cgpa" step="0.01" min="0" max="10" value="8.84" required class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+          <div>
+            <label class="block font-label-code-sm text-xs text-outline mb-1">Target CGPA</label>
+            <input type="number" id="pref-target" step="0.01" min="0" max="10" value="9.20" required class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-code-sm text-xs text-outline mb-1">Institute</label>
+          <input type="text" id="pref-inst" value="Budge Budge Institute of Technology (MAKAUT)" class="w-full h-11 px-3 rounded-lg bg-surface-container-high cyber-border text-on-surface text-sm">
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+          <button type="button" onclick="closeModal('modal-profile-edit')" class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold text-sm">Save Preferences</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Client-side Audio and App Scripts (Vite Module) -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
