@@ -1,0 +1,16 @@
+{
+  "name": "CSE Academic Command Center",
+  "short_name": "AcademicDeck",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f131d",
+  "theme_color": "#0f131d",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "48x48 72x72 96x96 144x144 192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+
